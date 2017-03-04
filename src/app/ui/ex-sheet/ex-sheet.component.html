@@ -1,0 +1,32 @@
+
+
+
+
+<table border="1" class="table table-striped table-sheet">
+    <tr><th>#</th>
+        <th *ngFor="let col of columns">{{ col }}</th>
+    </tr>
+    <tr *ngFor="let row of rows">
+        <th  scope="row">{{ row }}</th>
+        <td *ngFor="let col of columns">
+          <ex-cell></ex-cell>
+             <!-- <cell [id]="col+row"></cell> -->
+        </td>
+    </tr>
+</table>
+<button type="button" class="btn btn-success btn-add"
+data-toggle="tooltip" data-placement="right"
+title="Add a column" (click)="onAdd()">Column</button>
+
+<!-- <table border="1" class="table table-striped table-sheet">
+    <tr>
+        <th *ngFor="let co of cells[0].col">{{ co }}</th>
+    </tr> -->
+    <!-- <tr *ngFor="let row of cells.row">
+        <th  scope="row">{{ row }}</th>
+        <td *ngFor="let col of columns">
+          <ex-cell></ex-cell>
+
+        </td>
+    </tr> -->
+<!-- </table> -->
