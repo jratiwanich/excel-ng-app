@@ -1,0 +1,7 @@
+.form-cell{
+  background-color: #eeeeee;
+}
+
+.form-cell:focus{
+  background-color: #ffffff;
+}

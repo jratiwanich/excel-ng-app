@@ -1,6 +1,10 @@
 <h1>
   {{title}}
 </h1>
-<ex-toolbar></ex-toolbar>
-<ex-sheet></ex-sheet>
-<ex-toolbar></ex-toolbar>
+<h5>by <a href="https://www.linkedin.com/in/jakratiwanich/">Jak Ratiwanich</a></h5>
+<ex-toolbar (eAddRow)="onAddedRow($event)"
+            (eAddCol)="onAddedColumn($event)"></ex-toolbar>
+<ex-sheet [userClicked]="pUserClicked"
+          [rowCount]="pRowCount"  (rowCounted)="onRowCounted($event)"
+          [colCount]="pColCount"  (colCounted)="onColumnCounted($event)" ></ex-sheet>
+<!-- -->
