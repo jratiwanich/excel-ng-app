@@ -1,6 +1,15 @@
 # ExcelNgApp
 Application name is `ExcelNgApp`
 
+## Features
+1) Display the web version of Spreadsheet 'Excel' style
+2) Add Row or Column
+3) Delete Row or Column
+
+## Out of Scope
+1) Data only resides in the browser's memory.
+2) Data will not be saved into a permanent storage e.g. file, local storage, cookie, or database.
+
 ## Design Architecture
 `ExcelNgApp` --> `ExSheetComponent` --> `ExCell`
 

@@ -1,1 +1,13 @@
-<input type="text" class="form-control form-cell" id="cell1">
+<!-- <div class="input-group">
+  <input type="text" class="form-control form-cell"
+   [(ngModel)]="cell"
+   (focusout)="calculateFormula()">
+   <div class="form-output">={{ value$ | async }}</div>
+</div> -->
+
+ <input type="text" class="form-control form-cell"
+  [(ngModel)]="cell.formula" (focusout)="calculateFormula()"
+id="cell1">
+<div class="form-control form-output">{{ cell.data}}</div>
+
+  <!-- [attr.data-target]="'#' + student.id" -->

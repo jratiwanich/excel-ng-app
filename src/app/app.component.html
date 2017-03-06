@@ -3,8 +3,12 @@
 </h1>
 <h5>by <a href="https://www.linkedin.com/in/jakratiwanich/">Jak Ratiwanich</a></h5>
 <ex-toolbar (eAddRow)="onAddedRow($event)"
-            (eAddCol)="onAddedColumn($event)"></ex-toolbar>
+            (eAddCol)="onAddedColumn($event)"
+            (eDelRow)="onDeletedRow($event)"
+            (eDelCol)="onDeletedColumn($event)"
+            [position]="pGrid"></ex-toolbar>
 <ex-sheet [userClicked]="pUserClicked"
-          [rowCount]="pRowCount"  (rowCounted)="onRowCounted($event)"
-          [colCount]="pColCount"  (colCounted)="onColumnCounted($event)" ></ex-sheet>
+          [rowSelected]="pRowSelected" [colSelected]="pColSelected"
+          [rowCount]="pGrid.row"  (rowCounted)="onRowCounted($event)"
+          [colCount]="pGrid.col"  (colCounted)="onColumnCounted($event)" ></ex-sheet>
 <!-- -->

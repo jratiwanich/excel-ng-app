@@ -1,4 +1,9 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Input } from '@angular/core';
+//import expressions from '../../../../node_modules/angular-expressions/lib/main.js';
+//import {ngParser} from '../../../../node_modules/ng-parser/dist/ngParser';
+
+import { CellObject} from '../../service/excel-ng.service';
+import { CellInputDirective } from '../directives/cell-input.directive';
 
 @Component({
   selector: 'ex-cell',
@@ -6,10 +11,40 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./ex-cell.component.css']
 })
 export class ExCellComponent implements OnInit {
+  @Input() cell: CellObject;
+  @Input() row: number;
+  @Input() col: number;
+  @Input() cellvalue: string;
 
-  constructor() { }
+  constructor() {
+    this.cell = new CellObject();
+  }
 
   ngOnInit() {
+  }
+
+//let expressions = require("angular-expressions");
+
+  calculateFormula(){
+    console.debug("ExCellComponent.calculateFormula() row="+this.row+", col="+this.col);
+    //check if the cell is not empty
+    if (typeof this.cell.formula!= 'undefined' && this.cell.formula) {
+      let index = this.cell.formula.indexOf('=');
+      console.debug("ExCellComponent indexOf="+index);
+      if(index==-1){
+        this.cell.data = this.cell.formula;
+      }else{
+        //start parsing formula here
+        //let s = expressions()
+        //need to write RegExpression to parse out math function
+        this.cell.data = this.cell.formula.slice(1,this.cell.formula.length);
+      }
+
+    }
+  }
+  onCellClick(){
+    //cell.data = "X";
+    console.debug("row="+this.row+", col="+this.col);
   }
 
 }

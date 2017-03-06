@@ -8,13 +8,15 @@ import { ExSheetComponent } from './ui/ex-sheet/ex-sheet.component';
 import { ExCellComponent } from './ui/ex-cell/ex-cell.component';
 import { ExToolbarComponent } from './ui/ex-toolbar/ex-toolbar.component';
 import { ExcelNgService } from './service/excel-ng.service';
+import { CellInputDirective } from './ui/directives/cell-input.directive';
 
 @NgModule({
   declarations: [
     ExcelNgApp,
     ExSheetComponent,
     ExCellComponent,
-    ExToolbarComponent
+    ExToolbarComponent,
+    CellInputDirective
   ],
   imports: [
     BrowserModule,

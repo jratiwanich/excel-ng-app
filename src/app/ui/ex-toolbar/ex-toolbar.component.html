@@ -12,21 +12,23 @@
   </li>
   <li class="nav-item mx-sm-3">
     <div class="input-group">
-      <input type="text" class="form-control form-delete" placeholder="0">
+      <input type="text" class="form-control form-delete"
+       [(ngModel)]="position.col">
       <span class="input-group-btn">
         <button class="btn btn-danger btn-delete" type="button"
         data-toggle="tooltip" data-placement="right"
-        title="Delete a column">Column</button>
+        title="Enter a column number or use default to delete a column" (click)="onDeleteColumn(position.col)">Column</button>
       </span>
     </div>
   </li>
   <li class="nav-item mx-sm-3">
     <div class="input-group">
-      <input type="text" class="form-control form-delete" placeholder="0">
+      <input type="text" class="form-control form-delete"
+        [(ngModel)]="position.row">
       <span class="input-group-btn">
         <button class="btn btn-danger btn-delete" type="button"
         data-toggle="tooltip" data-placement="right"
-        title="Delete a row">Row</button>
+        title="Enter a row number or use default to delete a row" (click)="onDeleteRow(position.row)">Row</button>
       </span>
     </div>
   </li>

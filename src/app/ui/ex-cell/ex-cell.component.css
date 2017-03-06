@@ -1,7 +1,28 @@
 .form-cell{
-  background-color: #eeeeee;
+  background-color: #ffffff;
+  overflow: hidden;
 }
 
-.form-cell:focus{
+.form-output {
+  margin-top: -38px;
+  pointer-events: none;
+  position: relative;
+  height: 38px;
+  /*top: 5;
+  width: 95%;
+  padding: 3px 0 0 8px;*/
+  background: #f9f7d2;
+  overflow: hidden;
+  }
+
+/*.form-cell:focus{
   background-color: #ffffff;
+}*/
+.form-cell:focus + .form-output {
+  display: none;
+}
+
+.selected {
+  background-color: green !important;
+  color: red;
 }

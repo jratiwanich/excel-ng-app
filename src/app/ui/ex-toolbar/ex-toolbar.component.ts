@@ -1,6 +1,7 @@
-import { Component, EventEmitter, Output} from '@angular/core';
+import { Component, EventEmitter, Output, Input} from '@angular/core';
 import { ExSheetComponent } from '../ex-sheet/ex-sheet.component';
-import { ExcelNgService,CellData } from '../../service/excel-ng.service';
+import { ExcelNgService, CellLocation} from '../../service/excel-ng.service';
+
 
 @Component({
   selector: 'ex-toolbar',
@@ -13,6 +14,7 @@ export class ExToolbarComponent {
   @Output() eAddCol: EventEmitter<any> = new EventEmitter();
   @Output() eDelRow: EventEmitter<any> = new EventEmitter();
   @Output() eDelCol: EventEmitter<any> = new EventEmitter();
+  @Input() position: CellLocation;
 
   constructor() { }
 
@@ -26,10 +28,14 @@ export class ExToolbarComponent {
   }
 
   onDeleteRow(r:number){
-    this.eDelRow.emit(r);
+    this.eDelRow.emit(r-1);
   }
 
   onDeleteColumn(c:number){
-    this.eDelCol.emit(c);
+    this.eDelCol.emit(c-1);
   }
+}
+
+export enum TOOLBAR{
+  addrow, addcol, delrow, delcol
 }

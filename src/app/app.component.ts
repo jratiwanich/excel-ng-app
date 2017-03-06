@@ -1,7 +1,8 @@
 import { Component, OnInit, ViewChild, Input,
-  ChangeDetectionStrategy,AfterContentChecked,AfterViewChecked } from '@angular/core';
-import { ExcelNgService,CellData } from './service/excel-ng.service';
+  ChangeDetectionStrategy,AfterViewChecked } from '@angular/core';
+import { ExcelNgService, CellLocation} from './service/excel-ng.service';
 import { ExSheetComponent } from './ui/ex-sheet/ex-sheet.component';
+import { TOOLBAR } from './ui/ex-toolbar/ex-toolbar.component';
 
 @Component({
   selector: 'app-root',
@@ -9,12 +10,16 @@ import { ExSheetComponent } from './ui/ex-sheet/ex-sheet.component';
   styleUrls: ['./app.component.css'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class ExcelNgApp implements OnInit,AfterContentChecked, AfterContentChecked{
+export class ExcelNgApp implements OnInit{
   title = 'Excel Grid application';
-  mysheet: CellData;
+
   pRowCount: number = 0;
   pColCount: number = 0;
-  pUserClicked: boolean = false;
+  pGrid = new CellLocation(0,0);
+  //pGrid: CellLocation;
+  pUserClicked: string;
+  pRowSelected: number;
+  pColSelected: number;
 
   //myrows2: Array<number>;
   @ViewChild(ExSheetComponent) childView: ExSheetComponent;
@@ -23,19 +28,19 @@ export class ExcelNgApp implements OnInit,AfterContentChecked, AfterContentCheck
     console.log("constructor");
 
  }
- ngAfterContentChecked() {
-   if (typeof this.mysheet != 'undefined' && this.mysheet) {
-     console.log("ExcelNgApp.ngAfterContentChecked=" + this.mysheet.row);
-     //this.myrows2 = this.mysheet.row;
-   }else{
-     console.log("ExcelNgApp.ngAfterContentChecked().pRowCount=" + this.pRowCount );
-
-   }
-
- }
+ // ngAfterContentChecked() {
+ //   if (typeof this.mysheet != 'undefined' && this.mysheet) {
+ //     console.log("ExcelNgApp.ngAfterContentChecked=" + this.mysheet.row);
+ //     //this.myrows2 = this.mysheet.row;
+ //   }else{
+ //     console.log("ExcelNgApp.ngAfterContentChecked().pRowCount=" + this.pGrid.row );
+ //
+ //   }
+ //
+ // }
 ngAfterViewChecked(){
-  this.pUserClicked = false;
-  console.log("ExcelNgApp.ngAfterViewChecked().pRowCount=" + this.pRowCount);
+  //this.pUserClicked = false;
+  console.log("ExcelNgApp.ngAfterViewChecked().pRowCount=" + this.pGrid.row);
 
 }
 
@@ -45,29 +50,38 @@ ngAfterViewChecked(){
   }
 
   onAddedRow(pressed: boolean){
-    this.pUserClicked = pressed;
+    this.pUserClicked = TOOLBAR[TOOLBAR.addrow];
     console.debug("ExcelNgApp.onAddedRow().pressed="+pressed);
     //console.log("ExcelNgApp.OnAddedRow().mysheet=" + this.mysheet);
-    this.pRowCount++;
-    //console.log("ExcelNgApp.onAddedRow().pRowCount="+this.pRowCount);
+    this.pGrid.row++;
+    //console.log("ExcelNgApp.onAddedRow().pRowCount="+this.pGrid.row);
   }
 
-  onAddedColumn(){
-    this.pColCount++;
+  onAddedColumn(pressed: boolean){
+    this.pUserClicked = TOOLBAR[TOOLBAR.addcol];
+    this.pGrid.col++;
   }
 
+  onDeletedRow(row: number){
+    this.pUserClicked = TOOLBAR[TOOLBAR.delrow];
+    this.pRowSelected = row;
+    this.pGrid.row--;
+  }
+
+  onDeletedColumn(col: number){
+    this.pUserClicked = TOOLBAR[TOOLBAR.delcol];
+    this.pColSelected = col;
+    this.pGrid.col--;
+  }
   //update the rowCount
   onRowCounted(i: number){
     //reset the user click state
-    //if(this.pUserClicked){
-      this.pUserClicked = false;
-      this.pRowCount = i;
-
-
-    console.debug("ExcelNgApp.onRowCounted().pRowCount="+this.pRowCount);
+    //this.pUserClicked = false;
+    this.pGrid.row = i;
+    console.debug("ExcelNgApp.onRowCounted().pRowCount="+this.pGrid.row);
   }
 
   onColumnCounted(i: number){
-    this.pColCount = i;
+    this.pGrid.col = i;
   }
 }

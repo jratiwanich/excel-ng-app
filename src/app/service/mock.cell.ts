@@ -1,6 +1,6 @@
-import {CellData} from './excel-ng.service'
+import {Grid} from './excel-ng.service'
 
-export const GRID1: CellData =
+export const GRID1: Grid =
   {row: [1, 2, 3, 4, 5],
   col: ['A', 'B', 'C','D']};
 //];
