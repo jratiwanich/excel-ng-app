@@ -49,12 +49,42 @@ export class ExCellComponent implements OnInit {
   addbits(ins: string){
     let total: number =0;
     let s: Array<number>;
-    const reg = '/[+\-]*(\.\d+|\d+(\.\d+)?)/g';
+    const reg = "/[+\\-]*(\\.\\d+|\\d+(\\.\\d+)?)/g";
     let val = ins.match(/[+\-]*(\.\d+|\d+(\.\d+)?)/g)||[];
+    let val2 = ins.split(/[+\-\*\/]*(\.\d+|\d+(\.\d+)?)/g);
+    let val3 = ins.match(/[+\-\/\*]*/g);
+    let val4 = ins.split(/[+\-\/\*]*/g);
+    let val5 = ins.split("");
     let found = ins.match(reg)||[];
     console.debug("found="+ found);
-     while(val.length){
-         total+= parseFloat(val.shift());
+     while(val5.length){
+         //total+= parseFloat(val5.shift());
+         //switch(val5){
+         let m:string = val5.shift();
+         let ok = /\+/.test(m);
+         if (/(\.\d+|\d+(\.\d+)?)/g.test(m)) {
+           console.debug("n="+m);
+           total= parseFloat(m);
+           console.debug("total="+total);
+         }else
+          if (/\+/.test(m)) {
+
+            total+= parseFloat(val5.shift());
+            console.debug("+"+total);
+          }else
+          if (/\-/.test(m)) {
+            total-= parseFloat(val5.shift());
+            console.debug("-"+total);
+          }else
+          if (/\*/.test(m)) {
+            total*= parseFloat(val5.shift());
+            console.debug("*"+total);
+          }else
+          if (/\\/.test(m)) {
+
+            total/= parseFloat(val5.shift());
+            console.debug("\\"+total);
+          }
      }
     return total;
 }
