@@ -38,10 +38,26 @@ export class ExCellComponent implements OnInit {
         //let s = expressions()
         //need to write RegExpression to parse out math function
         this.cell.data = this.cell.formula.slice(1,this.cell.formula.length);
+        let tot = this.addbits(this.cell.data);
+        console.debug("addbits total="+ tot);
+        this.cell.data = tot.toString();
       }
 
     }
   }
+
+  addbits(ins: string){
+    let total: number =0;
+    let s: Array<number>;
+    const reg = '/[+\-]*(\.\d+|\d+(\.\d+)?)/g';
+    let val = ins.match(/[+\-]*(\.\d+|\d+(\.\d+)?)/g)||[];
+    let found = ins.match(reg)||[];
+    console.debug("found="+ found);
+     while(val.length){
+         total+= parseFloat(val.shift());
+     }
+    return total;
+}
   onCellClick(){
     //cell.data = "X";
     console.debug("row="+this.row+", col="+this.col);
