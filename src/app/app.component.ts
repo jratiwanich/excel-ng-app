@@ -15,7 +15,7 @@ export class ExcelNgApp implements OnInit{
 
   pRowCount: number = 0;
   pColCount: number = 0;
-  pGrid = new CellLocation(0,0);
+  pGrid = new CellLocation(-1,-1);
   //pGrid: CellLocation;
   pUserClicked: string;
   pRowSelected: number;
@@ -39,8 +39,8 @@ export class ExcelNgApp implements OnInit{
  //
  // }
 ngAfterViewChecked(){
-  //this.pUserClicked = false;
-  console.log("ExcelNgApp.ngAfterViewChecked().pRowCount=" + this.pGrid.row);
+
+  console.debug("ExcelNgApp.ngAfterViewChecked().pGrid TOTAL=" + JSON.stringify(this.pGrid));
 
 }
 

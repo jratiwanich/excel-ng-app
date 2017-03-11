@@ -6,7 +6,7 @@
 </div> -->
 
  <input type="text" class="form-control form-cell"
-  [(ngModel)]="cell.formula" (focusout)="calculateFormula()"
+  [(ngModel)]="cell.formula" (focusout)="onExitCell()"
 id="cell1">
 <div class="form-control form-output">{{ cell.data}}</div>
 

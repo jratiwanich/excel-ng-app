@@ -15,6 +15,10 @@ export class CellObject{
     public location: CellLocation;
     public formula: string;
     public data: string;
+    constructor(){
+      //set the cell location at no where/offset on the grid
+      this.location= new CellLocation(-1,-1);
+    }
 }
 
 //Keeping track of cell position
@@ -22,10 +26,6 @@ export class CellLocation{
   constructor(public row: number,
               public col: number
               ) { }
-  // public set(r: number, c: number){
-  //   this.row = r;
-  //   this.col = c;
-  // }
 }
 
 //2D Structure grid in array for adding row and column

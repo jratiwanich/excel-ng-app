@@ -187,8 +187,8 @@ private getColumnLabel(len: number): string{
     this.sheet.col.splice(col,1);
   }
 
-  onSelected(){
-
+  //save data here on the cell exiting (out of focus)
+  onCellExited(cellnow: CellObject){
+      console.debug("ExSheetComponent.onCellExited() cell=" + JSON.stringify(cellnow));
   }
-
 }

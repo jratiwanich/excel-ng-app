@@ -15,3 +15,7 @@
 .td-cell{
   cursor: pointer;
 }
+
+.mycode{
+  float: right;
+}
