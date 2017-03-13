@@ -46,23 +46,24 @@ export class ExCellComponent implements OnInit {
           if(typeof this.sheetData!='undefined' && this.sheetData){
             //let co3 = this.findCellbyLocation(this.cell.location);
             //console.debug("FOUND!! ExCellComponent.CellObject() LOCATION=" + JSON.stringify(co3));
+            //need to read the formula
+            let val = this.cell.data.match(/([A-Z0-9]|\++|\-+|\*+|\/+|\.\d+|\d+(\.\d+)?)/g)||[];
+             console.debug("data = "+ JSON.stringify(val));
 
             let co4 = this.findCellbyID(this.cell.data);
             if(typeof co4!='undefined' && co4){
 
               console.debug("FOUND!! ExCellComponent.CellObject() ID=" + JSON.stringify(co4));
-
-              //need to read the formula
-              // let val = co4.data.match(/([a-z]|\++|\-+|\*+|\/+|\.\d+|\d+(\.\d+)?)/g)||[];
-              // console.debug("data = "+ JSON.stringify(val));
+              this.cell.data = co4.data;
+            }else{
+              let tot = this.calculateFormula(this.cell.data);
+              console.debug("onFormula() total="+ tot);
+              //display the value in the Cell
+              this.cell.data = tot.toString();
             }
           }
 
 
-          let tot = this.calculateFormula(this.cell.data);
-          console.debug("onFormula() total="+ tot);
-          //display the value in the Cell
-          this.cell.data = tot.toString();
         }
         //only print out the current cell data when not empty
         console.debug("ExCellComponent.onExitCell() cell=" + JSON.stringify(this.cell));
@@ -120,7 +121,7 @@ export class ExCellComponent implements OnInit {
     let v=0;
 
     console.debug("found="+ found);
-     while(val.length){
+    while(val.length){
          //total+= parseFloat(val5.shift());
          //switch(val5){
          let m:string = val.shift();
