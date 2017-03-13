@@ -21,6 +21,16 @@ Application name is `ExcelNgApp`
 
 8) When exiting a formula cell the actual value should be displayed
 
+## Test Cases
+1) Enter a cell value e.g. `=23`
+
+2) Display the cell value from other cell e.g. `=A1`
+
+3) Enter simple math operation in the formular e.g. `=4+3*20/2`
+
+4) Click Add Column or Row
+
+5) Click Delete Column or Row
 
 ## Out of Scope
 1) Data only resides in the browser's memory.
