@@ -10,26 +10,23 @@ import { CellInputDirective } from '../directives/cell-input.directive';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ExSheetComponent implements  OnChanges, OnInit {
-  //public columns = ['A', 'B', 'C'];
-  //public rows : Array<number>;
-
+  //send the output to the main parent app for current row and column count
   @Output() colCounted: EventEmitter<number> = new EventEmitter();
   @Output() rowCounted: EventEmitter<number> = new EventEmitter();
+  //taking input from user interaction
   @Input() colCount: number;
   @Input() rowCount: number;
   @Input() userClicked: string;
   @Input() rowSelected: number;
   @Input() colSelected: number;
 
-  private sheet: Grid;
-  private selectedCell: CellObject;
-  private cells: CellLocation[];
-  //private cellvalue = new CellLocation(0,0);
-  //alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ".split("");
-  //private eLabel = ColumnLabel;
+  private sheet: Grid; //keeping track from row and columns on the grid spreadsheet
+  private cellData: Array<CellObject>;
+  //private cells: Array<CellLocation>;
 
   constructor(private exService: ExcelNgService,
               private ref: ChangeDetectorRef) {
+    this.cellData = [];
     this.ref.markForCheck();
  }
 
@@ -82,6 +79,7 @@ export class ExSheetComponent implements  OnChanges, OnInit {
 //{[propName: string]: SimpleChange}
 ngOnChanges(changes: SimpleChanges) {
 if (typeof this.sheet != 'undefined' && this.sheet) {
+
    for (let propName in changes) {
      console.debug("ExSheetComponent.ngOnChanges sheet="
      + this.sheet + " propName=" + propName);
@@ -116,19 +114,8 @@ if (typeof this.sheet != 'undefined' && this.sheet) {
               if(propName==='colSelected')
                 this.DeleteColumn(this.colSelected);
               break;
-     }
-    //  if(propName==='userClicked')
-    //      this.userClicked = chng.currentValue;
-//&&  this.userClicked
-    //  if(propName==='rowCount' )
-    //     this.AddRow(this.rowCount);
-    //
-    // if(propName==='colCount' )
-    //     this.AddColumn(this.colCount);
-    // if(this.userClicked == TOOLBAR[TOOLBAR.delrow])
-    //   this.DeleteRow(1);
-     //console.debug("mysheet="+JSON.stringify(this.myrows));
-   }
+     }//end switch
+   }//end for loop
  }
 }
 
@@ -171,7 +158,7 @@ private getColumnLabel(len: number): string{
    //make sure row is not repeated
    if(newrow!=this.sheet.row[this.sheet.row.length-1])
       this.sheet.row.push(newrow);
-
+   //print the row count in the console
    console.debug("AddRow().rows.length="+this.sheet.row.length);
 
    //update the Row count in the Parent
@@ -187,8 +174,15 @@ private getColumnLabel(len: number): string{
     this.sheet.col.splice(col,1);
   }
 
+  onCellClick(r:number, c: number){
+    console.debug("ExSheetComponent.onCellClick() row="+r+", col="+c);
+  }
+
   //save data here on the cell exiting (out of focus)
   onCellExited(cellnow: CellObject){
+      console.debug("ColumnLabel="+ this.getColumnLabel(cellnow.location.col));
+      cellnow.id = this.getColumnLabel(cellnow.location.col) + (cellnow.location.row+1).toString();
       console.debug("ExSheetComponent.onCellExited() cell=" + JSON.stringify(cellnow));
+      this.cellData.push(cellnow);
   }
 }

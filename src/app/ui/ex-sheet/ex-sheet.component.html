@@ -9,7 +9,7 @@
     <tr *ngFor="let row of sheet.row; let i = index">
         <th  scope="row">{{ row }}</th>
         <td *ngFor="let col of sheet.col; let j = index" class="td-cell">
-          <ex-cell [row]="i" [col]="j"
+          <ex-cell [row]="i" [col]="j" [sheetData]="cellData" (click)="onCellClick(i,j)"
                    (cellNotifier)="onCellExited($event)"></ex-cell>
              <!-- <cell [id]="col+row"></cell> -->
         </td>

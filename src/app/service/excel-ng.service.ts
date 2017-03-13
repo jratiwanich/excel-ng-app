@@ -12,6 +12,7 @@ export class ExcelNgService {
 
 //Keep data of each cell
 export class CellObject{
+    public id: string;
     public location: CellLocation;
     public formula: string;
     public data: string;

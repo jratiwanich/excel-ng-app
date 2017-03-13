@@ -1,6 +1,7 @@
 import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
+import {Observable} from 'rxjs/Rx';
 
-import { CellObject} from '../../service/excel-ng.service';
+import { CellObject, CellLocation} from '../../service/excel-ng.service';
 import { CellInputDirective } from '../directives/cell-input.directive';
 
 @Component({
@@ -10,6 +11,7 @@ import { CellInputDirective } from '../directives/cell-input.directive';
 })
 export class ExCellComponent implements OnInit {
   @Input() cell: CellObject;
+  @Input() sheetData: Array<CellObject>;
   @Input() row: number;
   @Input() col: number;
   //@Input() cellvalue: string;
@@ -38,6 +40,25 @@ export class ExCellComponent implements OnInit {
         }else{
           //strip out "=" from the formula and calculate the math
           this.cell.data = this.cell.formula.slice(1,this.cell.formula.length);
+          let val = this.cell.data.match(/([a-z]|\++|\-+|\*+|\/+|\.\d+|\d+(\.\d+)?)/g)||[];
+          console.debug("data = "+ JSON.stringify(val));
+
+          if(typeof this.sheetData!='undefined' && this.sheetData){
+            //let co3 = this.findCellbyLocation(this.cell.location);
+            //console.debug("FOUND!! ExCellComponent.CellObject() LOCATION=" + JSON.stringify(co3));
+
+            let co4 = this.findCellbyID(this.cell.data);
+            if(typeof co4!='undefined' && co4){
+
+              console.debug("FOUND!! ExCellComponent.CellObject() ID=" + JSON.stringify(co4));
+
+              //need to read the formula
+              // let val = co4.data.match(/([a-z]|\++|\-+|\*+|\/+|\.\d+|\d+(\.\d+)?)/g)||[];
+              // console.debug("data = "+ JSON.stringify(val));
+            }
+          }
+
+
           let tot = this.calculateFormula(this.cell.data);
           console.debug("onFormula() total="+ tot);
           //display the value in the Cell
@@ -48,8 +69,38 @@ export class ExCellComponent implements OnInit {
         //emit output data if not empty
         this.cellNotifier.emit(this.cell);
 
+      }else
+        if ( this.cell.formula==""){
+          this.cell.data ="";
       }
     }
+  }
+
+  //find by location and return CellObject
+  findCellbyLocation(lc: CellLocation): CellObject{
+    let foundCell: any;
+    //this will work also and returning array
+    //let xxs = this.sheetData.filter(co1 => (co1.location.row == co.location.row && co1.location.col == co.location.col ));
+     Observable.from(this.sheetData)
+      .filter((cells) =>
+               (cells.location.row == lc.row && cells.location.col == lc.col ))
+      .subscribe(x => foundCell=x);
+
+    console.debug("FOUND! ExCellComponent.findCellbyLocation()=" + JSON.stringify(foundCell));
+    return foundCell;
+  }
+
+  //find by ID and return CellObject
+  findCellbyID(id: string): CellObject{
+    let foundCell: any;
+    //make sure to compare in uppercase
+    id = id.toUpperCase();
+     Observable.from(this.sheetData)
+      .filter((cells) => cells.id == id)
+      .subscribe(x => foundCell=x);
+
+    console.debug("FOUND! ExCellComponent.findCellbyID()=" + JSON.stringify(foundCell));
+    return foundCell;
   }
 
   //calculate the formular from string using Reg. Expression
@@ -74,31 +125,11 @@ export class ExCellComponent implements OnInit {
          //switch(val5){
          let m:string = val.shift();
          let ok = /\+/.test(m);
-
+         //checking for the operator
          if (/(\.\d+|\d+(\.\d+)?)/g.test(m)) {
            console.debug("n="+m);
            v = parseFloat(m);
            total = v;
-           //checking for the operator
-          //  if (/\+/.test(m.charAt(0))) {
-          //    total = v+ parseFloat(val.shift());
-          //    console.debug("+ total="+total);
-          //  }else
-          //  if (/\-/.test(m.charAt(0))) {
-          //    total = v- parseFloat(val.shift());
-          //    console.debug("- total="+total);
-          //  }else
-          //  if (/\*/.test(m.charAt(0))) {
-          //    total = v* parseFloat(val.shift());
-          //    console.debug("* total="+total);
-          //  }else
-          //  if (/\//.test(m.charAt(0))) {
-          //    total= v/ parseFloat(val.shift());
-          //    console.debug("\/ total="+total);
-          //  }
-
-
-
            console.debug("total="+total);
          }else
           if (/\+/.test(m)) {
@@ -119,10 +150,11 @@ export class ExCellComponent implements OnInit {
           }
      }
     return total;
-}
+  }
+
   onCellClick(){
     //cell.data = "X";
-    console.debug("row="+this.row+", col="+this.col);
+    console.debug("ExCellComponent.onCellClick() row="+this.row+", col="+this.col);
   }
 
 }
