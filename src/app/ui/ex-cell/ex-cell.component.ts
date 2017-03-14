@@ -40,27 +40,41 @@ export class ExCellComponent implements OnInit {
         }else{
           //strip out "=" from the formula and calculate the math
           this.cell.data = this.cell.formula.slice(1,this.cell.formula.length);
-          let val = this.cell.data.match(/([a-z]|\++|\-+|\*+|\/+|\.\d+|\d+(\.\d+)?)/g)||[];
+          let val = this.cell.data.match(/(([A-Z]+[0-9]+)|\++|\-+|\*+|\/+|\.\d+|\d+(\.\d+)?)/g)||[];
+          //let val = this.cell.data.match(/(([A-Z]\d+)C(\d+)(.*)/g)||[];
           console.debug("data = "+ JSON.stringify(val));
 
           if(typeof this.sheetData!='undefined' && this.sheetData){
             //let co3 = this.findCellbyLocation(this.cell.location);
             //console.debug("FOUND!! ExCellComponent.CellObject() LOCATION=" + JSON.stringify(co3));
-            //need to read the formula
-            let val = this.cell.data.match(/([A-Z0-9]|\++|\-+|\*+|\/+|\.\d+|\d+(\.\d+)?)/g)||[];
-             console.debug("data = "+ JSON.stringify(val));
+            //need to read the formula with pattern e.g. A1+a2+3-b3 (ignore case)
+            let values = this.cell.data.match(/([A-Z][0-9]|\++|\-+|\*+|\/+|\.\d+|\d+(\.\d+)?)/gi)||[];
+             console.debug("data values= "+ JSON.stringify(values));
+             let parsedVals= []; //keep track of values in array, not used
+             let parsedFormula = "";//concat values in this string
+             while(values.length){
+                //locate cell value from other cells by ID
+                let v = values.shift();
+                let co = this.findCellbyID(v);
+                if(typeof co!='undefined' && co){
+                  parsedVals.push(co.data);
+                  parsedFormula += co.data;
+                   //check for number
+                  //  let x = parseFloat(co.data);
+                  //  if(!isNaN(x)){
+                  //    parsedVals.push(x);
+                  // }
+                }else{
+                  parsedFormula += v;
+                  parsedVals.push(v);
+                }
+             }
 
-            let co4 = this.findCellbyID(this.cell.data);
-            if(typeof co4!='undefined' && co4){
-
-              console.debug("FOUND!! ExCellComponent.CellObject() ID=" + JSON.stringify(co4));
-              this.cell.data = co4.data;
-            }else{
-              let tot = this.calculateFormula(this.cell.data);
-              console.debug("onFormula() total="+ tot);
-              //display the value in the Cell
-              this.cell.data = tot.toString();
-            }
+             console.debug("converted values="+ JSON.stringify(parsedVals));
+             let tot = this.calculateFormula(parsedFormula);
+             console.debug("onFormula() total="+ tot);
+             //display the value in the Cell
+             this.cell.data = tot.toString();
           }
 
 
@@ -72,7 +86,7 @@ export class ExCellComponent implements OnInit {
 
       }else
         if ( this.cell.formula==""){
-          this.cell.data ="";
+          this.cell.data =""; //when user delete the value, just empty the data field for now
       }
     }
   }
@@ -110,22 +124,22 @@ export class ExCellComponent implements OnInit {
   calculateFormula(ins: string){
     let total: number =0;
     let s: Array<number>;
-    const reg = "/[+\\-]*(\\.\\d+|\\d+(\\.\\d+)?)/g";
-    let val0 = ins.match(/[\+\-\*\/]*(\.\d+|\d+(\.\d+)?)/g)||[];
-    let val = ins.match(/(\++|\-+|\*+|\/+|\.\d+|\d+(\.\d+)?)/g)||[];
+    const reg = /(\++|\-+|\*+|\/+|\.\d+|\d+(\.\d+)?)/g;
+    //my test cases - not used
+    let val1 = ins.match(/(\++|\-+|\*+|\/+|\.\d+|\d+(\.\d+)?)/g)||[];
+    //split only the number in the array - not used
     let val2 = ins.split(/[+\-\*\/]*(\.\d+|\d+(\.\d+)?)/g);
+    //find only math operators in the array - not used
     let operators = ins.match(/[\+\-\/\*]*/g);
-    let num = ins.split(/[+\-\/\*]*/g);
-    let val5 = ins.split("");
+
     let found = ins.match(reg)||[];
     let v=0;
 
     console.debug("found="+ found);
-    while(val.length){
-         //total+= parseFloat(val5.shift());
-         //switch(val5){
-         let m:string = val.shift();
-         let ok = /\+/.test(m);
+
+    while(found.length){
+
+         let m:string = found.shift();
          //checking for the operator
          if (/(\.\d+|\d+(\.\d+)?)/g.test(m)) {
            console.debug("n="+m);
@@ -134,19 +148,19 @@ export class ExCellComponent implements OnInit {
            console.debug("total="+total);
          }else
           if (/\+/.test(m)) {
-            total += parseFloat(val.shift());
+            total += parseFloat(found.shift());
             console.debug("+ total="+total);
           }else
           if (/\-/.test(m)) {
-            total -= parseFloat(val.shift());
+            total -= parseFloat(found.shift());
             console.debug("- total="+total);
           }else
           if (/\*/.test(m)) {
-            total *= parseFloat(val.shift());
+            total *= parseFloat(found.shift());
             console.debug("* total="+total);
           }else
           if (/\//.test(m)) {
-            total /= parseFloat(val.shift());
+            total /= parseFloat(found.shift());
             console.debug("\/ total="+total);
           }
      }
